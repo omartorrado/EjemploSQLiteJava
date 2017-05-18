@@ -29,7 +29,12 @@ public class EjemploSQLiteJava {
             Statement st = cn.createStatement();
             //A partir de aqui podemos interactuar con la BD usando el statement
             st.executeUpdate("DROP table ejemplo");//Hacemos el drop pq si la tabla ya existe da error
-            st.executeUpdate("CREATE table ejemplo(id integer, nombre string, valor float)");//Creamos una tabla
+            st.executeUpdate("CREATE table ejemplo(id integer, nombre varchar, valor float)");//Creamos una tabla
+            /*
+            A la hora de indicar los DataTypes podemos usar diferentes notaciones, por ejemplo
+            nos serviría tanto string, como varchar o varchar(20), Char(20)
+            Mas informacion al respecto en: https://www.sqlite.org/datatype3.html y https://www.w3schools.com/sql/sql_datatypes_general.asp
+            */
             st.executeUpdate("INSERT into ejemplo values(1,'Omar',8.25)");//añadimos una fila a dicha tabla
             st.executeUpdate("INSERT into ejemplo values(null,'Pedro',null)");//aqui uno de los campos va vacio,si es un numero le asigna valor por defecto 0 (o 0.0)
             st.executeUpdate("insert into ejemplo values(3,null,1.9834)");//aqui creamos una con el campo nombre como null, si pusiesemos el nombre sin las comillas daria error de SQL
@@ -38,14 +43,15 @@ public class EjemploSQLiteJava {
             /*
             Creando la tabla con una primary key como en la siguiente linea si k haria que diese un error de SQL la linea anterior
             st.executeUpdate("CREATE table ejemplo(id integer, nombre string, valor float, primary key (id))");
-            */
-            //Realizamos una consulta
+            */            
+            //Realizamos una consulta (Viene siendo un cursor el ResultSet)
             ResultSet consulta1=st.executeQuery("SELECT * from ejemplo");
             //Imprimimos los resultados con un while
             while(consulta1.next()){
+                //Para mostrar los resultados podemos acceder a ellos con getInt, etc, segun el tipo de dato
                 System.out.println("ID: "+consulta1.getInt("id")+", nombre: "+
                         consulta1.getString("nombre")+", valor: "+consulta1.getFloat("valor"));
-            }
+                }
         //Aki vienen los try-catch para las posibles excepciones
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EjemploSQLiteJava.class.getName()).log(Level.SEVERE, null, ex);
