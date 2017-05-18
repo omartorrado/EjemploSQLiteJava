@@ -28,10 +28,17 @@ public class EjemploSQLiteJava {
             //Instanciamos un Statement (Para realizar consultas, etc)
             Statement st = cn.createStatement();
             //A partir de aqui podemos interactuar con la BD usando el statement
-            st.executeUpdate("DROP table if exists ejemplo");
-            st.executeUpdate("CREATE table ejemplo(id integer, nombre string, valor float)");
-            st.executeUpdate("INSERT into ejemplo values(1,'Omar',8.25)");
-            st.executeUpdate("INSERT into ejemplo values(2,'Pedro',7.86)");
+            st.executeUpdate("DROP table ejemplo");//Hacemos el drop pq si la tabla ya existe da error
+            st.executeUpdate("CREATE table ejemplo(id integer, nombre string, valor float)");//Creamos una tabla
+            st.executeUpdate("INSERT into ejemplo values(1,'Omar',8.25)");//añadimos una fila a dicha tabla
+            st.executeUpdate("INSERT into ejemplo values(null,'Pedro',null)");//aqui uno de los campos va vacio,si es un numero le asigna valor por defecto 0 (o 0.0)
+            st.executeUpdate("insert into ejemplo values(3,null,1.9834)");//aqui creamos una con el campo nombre como null, si pusiesemos el nombre sin las comillas daria error de SQL
+            //st.executeUpdate("INSERT into ejemplo values(1,Omar,8.25)"); -> Esto da error por lo dicho arriba
+            st.executeUpdate("INSERT into ejemplo values(1,'Omar',8.25)");//No pone ningun impedimento a la hora de repetir resultados ¿quiza pq no definimos clave primaria?->exacto
+            /*
+            Creando la tabla con una primary key como en la siguiente linea si k haria que diese un error de SQL la linea anterior
+            st.executeUpdate("CREATE table ejemplo(id integer, nombre string, valor float, primary key (id))");
+            */
             //Realizamos una consulta
             ResultSet consulta1=st.executeQuery("SELECT * from ejemplo");
             //Imprimimos los resultados con un while
