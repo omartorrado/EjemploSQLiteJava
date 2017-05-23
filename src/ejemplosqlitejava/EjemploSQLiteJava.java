@@ -52,6 +52,12 @@ public class EjemploSQLiteJava {
                 System.out.println("ID: "+consulta1.getInt("id")+", nombre: "+
                         consulta1.getString("nombre")+", valor: "+consulta1.getFloat("valor"));
                 }
+            /*
+            Genero una tabla diferente
+            */
+            st.executeUpdate("create table jugadores(id integer, nombre string)");
+            st.executeUpdate("create table barajas(id integer, baraja string");
+            st.executeUpdate("create table cartas(idc integer, vida integer, ataque integer, coste integer");
         //Aki vienen los try-catch para las posibles excepciones
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EjemploSQLiteJava.class.getName()).log(Level.SEVERE, null, ex);
