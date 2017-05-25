@@ -11,14 +11,17 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author guest-z5aepn
+ * @author Omar Torrado Miguez
  */
 public class EjemploSQLiteJava {
 
     /**
+     * Antes de comenzar, debemos incluir la libreria de sqlite en nuestro proyecto
+     * Puedes obtener la ultima version en: https://bitbucket.org/xerial/sqlite-jdbc/downloads/
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Creamos una variable para la conexion
         Connection cn=null;
         try {
             //Cargamos el driver JDBC para sqlite (Esta en la libreria)
@@ -28,7 +31,10 @@ public class EjemploSQLiteJava {
             //Instanciamos un Statement (Para realizar consultas, etc)
             Statement st = cn.createStatement();
             //A partir de aqui podemos interactuar con la BD usando el statement
-            st.executeUpdate("DROP table ejemplo");//Hacemos el drop pq si la tabla ya existe da error
+            st.executeUpdate("DROP table if exists ejemplo");//Hacemos el drop pq si la tabla ya existe da error
+            st.executeUpdate("DROP table if exists cartas");
+            st.executeUpdate("DROP table if exists jugadores");
+            st.executeUpdate("DROP table if exists barajas");
             st.executeUpdate("CREATE table ejemplo(id integer, nombre varchar, valor float)");//Creamos una tabla
             /*
             A la hora de indicar los DataTypes podemos usar diferentes notaciones, por ejemplo
@@ -44,24 +50,31 @@ public class EjemploSQLiteJava {
             Creando la tabla con una primary key como en la siguiente linea si k haria que diese un error de SQL la linea anterior
             st.executeUpdate("CREATE table ejemplo(id integer, nombre string, valor float, primary key (id))");
             */            
-            //Realizamos una consulta (Viene siendo un cursor el ResultSet)
+            //Realizamos una consulta con executeQuery y la guardamos en el ResultSet (Viene siendo un cursor el ResultSet)
             ResultSet consulta1=st.executeQuery("SELECT * from ejemplo");
             //Imprimimos los resultados con un while
             while(consulta1.next()){
                 //Para mostrar los resultados podemos acceder a ellos con getInt, etc, segun el tipo de dato
+                //Los gets se pueden hacer o por el nombre del campo o por el numero de columna (la inicial es 1)
                 System.out.println("ID: "+consulta1.getInt("id")+", nombre: "+
                         consulta1.getString("nombre")+", valor: "+consulta1.getFloat("valor"));
                 }
+            //En caso de que el tipo de dato no se corresponda intentará hacer la conversion al tipo pedido
+            //y en caso de no poder pondra el valor por defecto (para integer 0,...)
             /*
             Genero una tabla diferente
             */
             st.executeUpdate("create table jugadores(id integer, nombre string)");
-            st.executeUpdate("create table barajas(id integer, baraja string");
-            st.executeUpdate("create table cartas(idc integer, vida integer, ataque integer, coste integer");
+            st.executeUpdate("create table barajas(id integer, baraja string)");
+            st.executeUpdate("create table cartas(idc integer, vida integer, ataque integer, coste integer)");
+            //Este resultSet contiene los nombres de todas las tablas de la bd
+            ResultSet listaTabla=st.executeQuery("select name from sqlite_master where type='table'");
+            while(listaTabla.next()){
+                System.out.println(listaTabla.getString(1));
+            }
+                     
         //Aki vienen los try-catch para las posibles excepciones
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EjemploSQLiteJava.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(EjemploSQLiteJava.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             /*Por ultimo si la conexion no es nula la cierra (y con ello tb los 
