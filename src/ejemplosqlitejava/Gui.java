@@ -9,6 +9,7 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -31,20 +32,30 @@ public class Gui {
     public Gui() {
         
         marco.setLayout(new FlowLayout());        
-        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        marco.setSize(1000,600);
-        marco.setLocationRelativeTo(null);
+        //marco.setLayout(null);
+        
         
         panelIzquierda.setLayout(new BoxLayout(panelIzquierda,BoxLayout.Y_AXIS));
+        panelIzquierda.add(new JLabel("Panel Izquierda"));
         
         panelDatos.setLayout(new BoxLayout(panelDatos,BoxLayout.Y_AXIS));
+        panelDatos.add(new JLabel("Panel Datos"));
+        
+        panelBotones.add(botonConsulta);
+        panelBotones.add(botonComando);
+        panelBotones.add(botonModificar);
         
         panelIzquierda.add(panelDatos);
         panelIzquierda.add(panelBotones);
-        
+                
         marco.add(panelIzquierda);
+
+        panelDerecha.setSize(500,600);
         marco.add(panelDerecha);
         
+        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        marco.setSize(1000,600);
+        marco.setLocationRelativeTo(null);
         marco.setVisible(true);
     }
     

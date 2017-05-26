@@ -21,6 +21,7 @@ public class PruebasGui {
         hand.cargarDB();
         
         
+        
     }
     
 }

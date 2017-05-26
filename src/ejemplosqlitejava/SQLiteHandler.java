@@ -5,9 +5,11 @@
  */
 package ejemplosqlitejava;
 
+import java.awt.Dimension;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -49,29 +51,49 @@ public class SQLiteHandler {
                 System.out.println("Nueva tabla");
                 System.out.println(nombreTabla);
                 
-                JScrollPane panelTabla=new JScrollPane();
                 JTable tabla=new JTable();
-                DefaultTableModel modeloTabla=(DefaultTableModel) tabla.getModel();
+                DefaultTableModel modeloTabla=new DefaultTableModel(); 
                 
                 //Creamos otro statement para esta busqueda y guardamos en el los
                 //datos de la tabla
                 Statement st2=cn.createStatement();
                 ResultSet rs=st2.executeQuery("pragma table_info("+nombreTabla+")");
-                ResultSetMetaData rsmd=rs.getMetaData();
+                //ResultSetMetaData rsmd=rs.getMetaData();
+                int contadorCampos=0;
                 while(rs.next()){
                     //La string 2 del pragma es el nombre y la 3 el typo de dato
                     String columnName=rs.getString(2);
+                    //Colun type no lo uso de momento
                     String columnType=rs.getString(3);
                     modeloTabla.addColumn(columnName);
+                    contadorCampos++;
                     }
-                //tabla.setModel(modeloTabla);  esto va luego
+                //Creo otro statement para la busqueda de los valores de cada fila de la tabla
                 Statement st3=cn.createStatement();
                 ResultSet rs2=st3.executeQuery("select * from "+nombreTabla);
+                //guardo los datos de cada fila en un array para incluirlos en el TableModel
+                Object[] fila=new Object[contadorCampos];
                 while(rs2.next()){
-                    
+                    int posicionFila=0;
+                    for(int g=0;g<contadorCampos;g++){
+                    fila[posicionFila]=rs2.getString(posicionFila+1);
+                    posicionFila++;
+                    }
+                    modeloTabla.addRow(fila);
                 }
+                //Finalmente asignamos el modelo a la tabla
+                tabla.setDefaultEditor(Object.class, null);
+                tabla.setModel(modeloTabla);
+                tabla.setShowGrid(true);
+                
+                int contadorTablas=0;
+                
+                Gui.panelDerecha.add(new JScrollPane(tabla));
+                Gui.panelDerecha.setTitleAt(contadorCampos, nombreTabla);
+                //Gui.panelDerecha.getComponent(0).
                 System.out.println("Fin Tabla");
             }
+            
         } catch (SQLException ex) {
             Logger.getLogger(SQLiteHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
