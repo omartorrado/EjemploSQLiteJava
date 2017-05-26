@@ -16,6 +16,9 @@ public class PruebasGui {
      */
     public static void main(String[] args) {
         Gui g=new Gui();
+        SQLiteHandler hand=new SQLiteHandler();
+        hand.conectar("ejemploDB.db");
+        hand.cargarDB();
         
         
     }

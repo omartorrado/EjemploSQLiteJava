@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -44,12 +45,32 @@ public class SQLiteHandler {
         try {
             ResultSet listaTabla=st.executeQuery("select name from sqlite_master where type='table'");
             while(listaTabla.next()){
-                System.out.println(listaTabla.getString(1));
+                String nombreTabla=listaTabla.getString(1);
+                System.out.println("Nueva tabla");
+                System.out.println(nombreTabla);
+                
                 JScrollPane panelTabla=new JScrollPane();
                 JTable tabla=new JTable();
-                //Hay que ver como crear las tablas con los campos sacados de la db
-                tabla.getModel().
-                Gui.panelDerecha.
+                DefaultTableModel modeloTabla=(DefaultTableModel) tabla.getModel();
+                
+                //Creamos otro statement para esta busqueda y guardamos en el los
+                //datos de la tabla
+                Statement st2=cn.createStatement();
+                ResultSet rs=st2.executeQuery("pragma table_info("+nombreTabla+")");
+                ResultSetMetaData rsmd=rs.getMetaData();
+                while(rs.next()){
+                    //La string 2 del pragma es el nombre y la 3 el typo de dato
+                    String columnName=rs.getString(2);
+                    String columnType=rs.getString(3);
+                    modeloTabla.addColumn(columnName);
+                    }
+                //tabla.setModel(modeloTabla);  esto va luego
+                Statement st3=cn.createStatement();
+                ResultSet rs2=st3.executeQuery("select * from "+nombreTabla);
+                while(rs2.next()){
+                    
+                }
+                System.out.println("Fin Tabla");
             }
         } catch (SQLException ex) {
             Logger.getLogger(SQLiteHandler.class.getName()).log(Level.SEVERE, null, ex);

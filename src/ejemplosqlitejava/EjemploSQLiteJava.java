@@ -72,6 +72,7 @@ public class EjemploSQLiteJava {
             while(listaTabla.next()){
                 System.out.println(listaTabla.getString(1));
             }
+            
                      
         //Aki vienen los try-catch para las posibles excepciones
         } catch (ClassNotFoundException | SQLException ex) {
