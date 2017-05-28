@@ -5,11 +5,11 @@
  */
 package ejemplosqlitejava;
 
-import java.awt.Dimension;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -44,12 +44,14 @@ public class SQLiteHandler {
     }
     
     public void cargarDB(){
+        Gui.panelDerecha.removeAll();
         try {
             ResultSet listaTabla=st.executeQuery("select name from sqlite_master where type='table'");
+            int contadorTablas=0;
             while(listaTabla.next()){
                 String nombreTabla=listaTabla.getString(1);
-                System.out.println("Nueva tabla");
-                System.out.println(nombreTabla);
+                //System.out.println("Nueva tabla");
+                //System.out.println(nombreTabla);
                 
                 JTable tabla=new JTable();
                 DefaultTableModel modeloTabla=new DefaultTableModel(); 
@@ -58,7 +60,7 @@ public class SQLiteHandler {
                 //datos de la tabla
                 Statement st2=cn.createStatement();
                 ResultSet rs=st2.executeQuery("pragma table_info("+nombreTabla+")");
-                //ResultSetMetaData rsmd=rs.getMetaData();
+                
                 int contadorCampos=0;
                 while(rs.next()){
                     //La string 2 del pragma es el nombre y la 3 el typo de dato
@@ -81,17 +83,19 @@ public class SQLiteHandler {
                     }
                     modeloTabla.addRow(fila);
                 }
+                Object[] filaVacia=new Object[contadorCampos];
+                modeloTabla.addRow(filaVacia);
                 //Finalmente asignamos el modelo a la tabla
                 tabla.setDefaultEditor(Object.class, null);
                 tabla.setModel(modeloTabla);
                 tabla.setShowGrid(true);
-                
-                int contadorTablas=0;
+                tabla.setName(nombreTabla);
                 
                 Gui.panelDerecha.add(new JScrollPane(tabla));
-                Gui.panelDerecha.setTitleAt(contadorCampos, nombreTabla);
-                //Gui.panelDerecha.getComponent(0).
-                System.out.println("Fin Tabla");
+                Gui.panelDerecha.setTitleAt(contadorTablas, nombreTabla);
+                
+                
+                contadorTablas++;
             }
             
         } catch (SQLException ex) {
