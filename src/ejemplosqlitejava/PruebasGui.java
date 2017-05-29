@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -65,45 +66,78 @@ public class PruebasGui {
             botonCommit.addActionListener((ActionEvent ev) -> {
                 //System.out.println((Gui.panelDatos.getComponentCount()-1)/2);
                 System.out.println(t1.getName());
-                /*
+                
                 String setValues=" ";                
                 for(int l=0;l<t1.getColumnCount();l++){
                     if(l<t1.getColumnCount()-1 && t1.getValueAt(t1.getSelectedRow(), l)!=null){
                     setValues=setValues+t1.getColumnName(l)+"='"+t1.getValueAt(t1.getSelectedRow(), l)+"' and ";
                     }else if(t1.getValueAt(t1.getSelectedRow(), l)!=null){
                         setValues=setValues+t1.getColumnName(l)+"='"+t1.getValueAt(t1.getSelectedRow(), l)+"'";
+                    }else if(t1.getValueAt(t1.getSelectedRow(), l)==null && l<t1.getColumnCount()-1){
+                        setValues=setValues+t1.getColumnName(l)+" is null and ";
+                    }else if(t1.getValueAt(t1.getSelectedRow(), l)==null){
+                      setValues=setValues+t1.getColumnName(l)+" is null "; 
                     }
                 }
-                */
+                
                 int k = 1;
                 for (int j = 0; j < (Gui.panelDatos.getComponentCount() - 1) / 2; j++) {
                     JTextField tf1 = (JTextField) Gui.panelDatos.getComponent(k);
                     t1.setValueAt(tf1.getText(), t1.getSelectedRow(), j);
                     k += 2;
                 }
-                /*
-                String setValuesUpdate=" set ";                
+                
+                String setValuesUpdate=" set ";
+                String insertValuesUpdate=" ";                
                 for(int l=0;l<t1.getColumnCount();l++){
-                    if(l<t1.getColumnCount()-1){
+                    if(l<t1.getColumnCount()-1 && t1.getValueAt(t1.getSelectedRow(), l)!=null){
                     setValuesUpdate=setValuesUpdate+t1.getColumnName(l)+"='"+t1.getValueAt(t1.getSelectedRow(), l)+"', ";
-                    }else{
+                    insertValuesUpdate=insertValuesUpdate+"'"+t1.getValueAt(t1.getSelectedRow(), l)+"',";
+                    }else if(t1.getValueAt(t1.getSelectedRow(), l)!=null){
                         setValuesUpdate=setValuesUpdate+t1.getColumnName(l)+"='"+t1.getValueAt(t1.getSelectedRow(), l)+"'";
+                    insertValuesUpdate=insertValuesUpdate+"'"+t1.getValueAt(t1.getSelectedRow(), l)+"'";
+                    }else if(l<t1.getColumnCount()-1 && t1.getValueAt(t1.getSelectedRow(), l)==null){
+                        setValuesUpdate=setValuesUpdate+t1.getColumnName(l)+"=null ,";
+                    insertValuesUpdate=insertValuesUpdate+t1.getValueAt(t1.getSelectedRow(), l)+",";
+                    }else if(t1.getValueAt(t1.getSelectedRow(), l)==null){
+                        setValuesUpdate=setValuesUpdate+t1.getColumnName(l)+"=null ";
+                    insertValuesUpdate=insertValuesUpdate+t1.getValueAt(t1.getSelectedRow(), l);
                     }
                 }
-*/
+
                 Gui.panelDatos.removeAll();
                 Gui.panelDatos.repaint();
                 Gui.panelDatos.revalidate();
                 
-                    /*
-                //String consulta="update "+t1.getName()+setValuesUpdate+" where"+setValues;
-                //System.out.println(consulta);
-                //hand.executeUpdate(consulta);
-                //hand.cargarDB();
-                //Gui.marco.repaint();
-                //Gui.marco.revalidate();
-                //System.out.println("Select id,nombre,valor from "+t1.getName()+" where"+setValues);
-                //ResultSet rs=hand.executeConsulta("Select id,nombre,valor from "+t1.getName()+" where"+setValues);
+                ResultSet rsNull=hand.executeConsulta("select count(*) from "+t1.getName());
+                int filasDB=0;
+                try {
+                    while(rsNull.next()){
+                        filasDB=rsNull.getInt(1);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(PruebasGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(filasDB<t1.getRowCount()){
+                String consulta="update "+t1.getName()+setValuesUpdate+" where"+setValues;
+                System.out.println(consulta);
+                hand.executeUpdate(consulta);
+                }else{
+                    String consultaInsert="insert into "+t1.getName()+" values("+insertValuesUpdate+")";
+                    System.out.println(consultaInsert);
+                    hand.executeUpdate(consultaInsert);
+                    DefaultTableModel nuevaFilaModel=(DefaultTableModel)t1.getModel();
+                    Object[] filaVacia=new Object[t1.getColumnCount()];
+                    nuevaFilaModel.addRow(filaVacia);
+                    t1.setModel(nuevaFilaModel);
+                    
+                }
+                hand.cargarDB();
+                Gui.marco.repaint();
+                Gui.marco.revalidate();
+                /*
+                System.out.println("Select id,nombre,valor from "+t1.getName()+" where"+setValues);
+                ResultSet rs=hand.executeConsulta("Select id,nombre,valor from "+t1.getName()+" where"+setValues);
                 try {
                     System.out.println("Aqui sale la consulta");
                     while(rs.next()){
@@ -113,7 +147,7 @@ public class PruebasGui {
                 } catch (SQLException ex) {
                     Logger.getLogger(PruebasGui.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                    */
+                */    
             });
         });
 

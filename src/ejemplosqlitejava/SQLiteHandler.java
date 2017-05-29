@@ -67,7 +67,7 @@ public class SQLiteHandler {
                     String columnName=rs.getString(2);
                     //Colun type no lo uso de momento
                     String columnType=rs.getString(3);
-                    modeloTabla.addColumn(columnName+"("+columnType+")");
+                    modeloTabla.addColumn(columnName);
                     contadorCampos++;
                     }
                 //Creo otro statement para la busqueda de los valores de cada fila de la tabla
