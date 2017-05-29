@@ -6,11 +6,9 @@
 package ejemplosqlitejava;
 
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -26,10 +24,10 @@ public class Gui {
     public static JPanel panelDatos = new JPanel();
     public static JPanel panelBotones = new JPanel();
     
-    JButton botonConsulta=new JButton("Realizar Consulta");
-    JButton botonComando=new JButton("Ejecutar Comando SQL");
-    JButton botonModificar= new JButton("Modificar fila");
-    JButton botonCargar=new JButton("Cargar base de datos");
+    //JButton botonConsulta=new JButton("Realizar Consulta");
+    public JButton botonComando=new JButton("Ejecutar Comando SQL");
+    public JButton botonModificar= new JButton("Modificar fila");
+    public JButton botonCargar=new JButton("Cargar base de datos");
 
     public Gui() {
         
@@ -39,9 +37,9 @@ public class Gui {
         
         panelDatos.setLayout(new BoxLayout(panelDatos,BoxLayout.Y_AXIS));
         
-        
+                
         panelBotones.add(botonCargar);
-        panelBotones.add(botonConsulta);
+        //panelBotones.add(botonConsulta);
         panelBotones.add(botonComando);
         panelBotones.add(botonModificar);
         

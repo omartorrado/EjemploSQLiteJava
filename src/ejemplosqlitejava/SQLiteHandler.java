@@ -5,8 +5,6 @@
  */
 package ejemplosqlitejava;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

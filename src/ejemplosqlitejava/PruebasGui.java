@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -42,6 +43,12 @@ public class PruebasGui {
             }
         });
 
+        g.botonComando.addActionListener((ActionEvent e) -> {
+            String comando = JOptionPane.showInputDialog("Intruzca el comando sql");
+            hand.executeUpdate(comando);
+            hand.cargarDB();
+        });
+
         g.botonModificar.addActionListener((ActionEvent e) -> {
             Gui.panelDatos.removeAll();
             Gui.panelDatos.repaint();
@@ -53,7 +60,7 @@ public class PruebasGui {
             JTable t1 = (JTable) vp1.getComponent(0);
             //System.out.println(t1.getSelectedRow());
             for (int i = 0; i < t1.getModel().getColumnCount(); i++) {
-                System.out.println(t1.getColumnName(i) + " , " + t1.getValueAt(t1.getSelectedRow(), i));
+                //System.out.println(t1.getColumnName(i) + " , " + t1.getValueAt(t1.getSelectedRow(), i));
                 Gui.panelDatos.add(new JLabel("" + t1.getColumnName(i)));
                 Gui.panelDatos.add(new JTextField("" + t1.getValueAt(t1.getSelectedRow(), i)));
 
@@ -73,9 +80,9 @@ public class PruebasGui {
                         setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "' and ";
                     } else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
                         setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null && l < t1.getColumnCount() - 1) {
+                    } else if ((t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) && l < t1.getColumnCount() - 1) {
                         setValues = setValues + t1.getColumnName(l) + " is null and ";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null) {
+                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) {
                         setValues = setValues + t1.getColumnName(l) + " is null ";
                     }
                 }
@@ -96,13 +103,15 @@ public class PruebasGui {
                     } else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
                         insertValuesUpdate = insertValuesUpdate + "'" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
-                    } else if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) == null) {
+                    } else if (l < t1.getColumnCount() - 1 && (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l) == "'null'")) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ,";
-                        insertValuesUpdate = insertValuesUpdate + t1.getValueAt(t1.getSelectedRow(), l) + ",";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null) {
+                        insertValuesUpdate = insertValuesUpdate + null + ",";
+                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("''")) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ";
-                        insertValuesUpdate = insertValuesUpdate + t1.getValueAt(t1.getSelectedRow(), l);
+                        insertValuesUpdate = insertValuesUpdate + null;
                     }
+                    System.out.println(t1.getValueAt(t1.getSelectedRow(), l) == null);
+                    System.out.println(t1.getValueAt(t1.getSelectedRow(), l) == "null");
                 }
 
                 Gui.panelDatos.removeAll();
