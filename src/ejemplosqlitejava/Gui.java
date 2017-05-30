@@ -6,6 +6,7 @@
 package ejemplosqlitejava;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,21 +29,27 @@ public class Gui {
     public JButton botonComando=new JButton("Ejecutar Comando SQL");
     public JButton botonModificar= new JButton("Modificar fila");
     public JButton botonCargar=new JButton("Cargar base de datos");
+    public JButton botonSalir = new JButton("Salir");
 
     public Gui() {
         
-        marco.setLayout(new FlowLayout());        
+        marco.setLayout(new FlowLayout());  
+        marco.setTitle("SQLite Simple Manager");
       
         panelIzquierda.setLayout(new BoxLayout(panelIzquierda,BoxLayout.Y_AXIS));
         
         panelDatos.setLayout(new BoxLayout(panelDatos,BoxLayout.Y_AXIS));
+
+        botonSalir.addActionListener((ActionEvent e)->{
+            System.exit(0);
+        });
         
-                
         panelBotones.add(botonCargar);
         //panelBotones.add(botonConsulta);
         panelBotones.add(botonComando);
         panelBotones.add(botonModificar);
-        
+        panelBotones.add(botonSalir);
+                
         panelIzquierda.add(panelDatos);
         panelIzquierda.add(panelBotones);
                 

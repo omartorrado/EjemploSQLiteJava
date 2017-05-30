@@ -35,17 +35,17 @@ public class EjemploSQLiteJava {
             st.executeUpdate("DROP table if exists cartas");
             st.executeUpdate("DROP table if exists jugadores");
             st.executeUpdate("DROP table if exists barajas");
-            st.executeUpdate("CREATE table ejemplo(id integer, nombre text, valor float)");//Creamos una tabla
+            st.executeUpdate("CREATE table ejemplo(id integer, nombre text, valor float, primary key (id))");//Creamos una tabla
             /*
             A la hora de indicar los DataTypes podemos usar diferentes notaciones, por ejemplo
             nos serviría tanto string, como varchar o varchar(20), Char(20)
             Mas informacion al respecto en: https://www.sqlite.org/datatype3.html y https://www.w3schools.com/sql/sql_datatypes_general.asp
             */
             st.executeUpdate("INSERT into ejemplo values(1,'Omar',8.25)");//añadimos una fila a dicha tabla
-            st.executeUpdate("INSERT into ejemplo values(null,'Pedro',null)");//aqui uno de los campos va vacio,si es un numero le asigna valor por defecto 0 (o 0.0)
+            st.executeUpdate("INSERT into ejemplo values(4,'Pedro',null)");//aqui uno de los campos va vacio,si es un numero le asigna valor por defecto 0 (o 0.0)
             st.executeUpdate("insert into ejemplo values(3,null,1.9834)");//aqui creamos una con el campo nombre como null, si pusiesemos el nombre sin las comillas daria error de SQL
             //st.executeUpdate("INSERT into ejemplo values(1,Omar,8.25)"); -> Esto da error por lo dicho arriba
-            st.executeUpdate("INSERT into ejemplo values(1,'Omar',8.25)");//No pone ningun impedimento a la hora de repetir resultados ¿quiza pq no definimos clave primaria?->exacto
+            st.executeUpdate("INSERT into ejemplo values(2,'Omar',8.25)");//No pone ningun impedimento a la hora de repetir resultados ¿quiza pq no definimos clave primaria?->exacto
             st.executeUpdate("UPDATE ejemplo set id=3, nombre='Paco', valor=2.25 where id=3 and nombre is null");
             /*
             Creando la tabla con una primary key como en la siguiente linea si k haria que diese un error de SQL la linea anterior
