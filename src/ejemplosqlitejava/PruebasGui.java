@@ -18,7 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -76,17 +75,20 @@ public class PruebasGui {
 
                 String setValues = " ";
                 for (int l = 0; l < t1.getColumnCount(); l++) {
-                    if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) != null) {
-                        setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "' and ";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
-                        setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
-                    } else if ((t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) && l < t1.getColumnCount() - 1) {
+                    if ((t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) && l < t1.getColumnCount() - 1) {
                         setValues = setValues + t1.getColumnName(l) + " is null and ";
                     } else if (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) {
                         setValues = setValues + t1.getColumnName(l) + " is null ";
-                    }
+                    }else if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                        setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "' and ";
+                    }else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                        setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
+                    } 
                 }
 
+                /*
+                Aqui inserto los nuevos valores en la tabla
+                 */
                 int k = 1;
                 for (int j = 0; j < (Gui.panelDatos.getComponentCount() - 1) / 2; j++) {
                     JTextField tf1 = (JTextField) Gui.panelDatos.getComponent(k);
@@ -97,41 +99,38 @@ public class PruebasGui {
                 String setValuesUpdate = " set ";
                 String insertValuesUpdate = " ";
                 for (int l = 0; l < t1.getColumnCount(); l++) {
-                    if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                    if (l < t1.getColumnCount() - 1 && (t1.getValueAt(t1.getSelectedRow(), l).equals("null") || t1.getValueAt(t1.getSelectedRow(), l).equals("''"))) {
+                        setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ,";
+                        insertValuesUpdate = insertValuesUpdate + "null ,";
+                    } else if (t1.getValueAt(t1.getSelectedRow(), l).equals("null") || t1.getValueAt(t1.getSelectedRow(), l).equals("''")) {
+                        setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ";
+                        insertValuesUpdate = insertValuesUpdate + "null ";
+                        //El !=null creo que dará true siempre pq
+                    } else if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) != null) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "', ";
                         insertValuesUpdate = insertValuesUpdate + "'" + t1.getValueAt(t1.getSelectedRow(), l) + "',";
                     } else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
                         insertValuesUpdate = insertValuesUpdate + "'" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
-                    } else if (l < t1.getColumnCount() - 1 && (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l) == "'null'")) {
-                        setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ,";
-                        insertValuesUpdate = insertValuesUpdate + null + ",";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("''")) {
-                        setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ";
-                        insertValuesUpdate = insertValuesUpdate + null;
                     }
-                    System.out.println(t1.getValueAt(t1.getSelectedRow(), l) == null);
-                    System.out.println(t1.getValueAt(t1.getSelectedRow(), l) == "null");
+
                 }
 
                 Gui.panelDatos.removeAll();
                 Gui.panelDatos.repaint();
                 Gui.panelDatos.revalidate();
 
-                ResultSet rsNull = hand.executeConsulta("select count(*) from " + t1.getName());
+                ResultSet rsNumFilas = hand.executeConsulta("select count(*) from " + t1.getName());
                 int filasDB = 0;
                 try {
-                    while (rsNull.next()) {
-                        filasDB = rsNull.getInt(1);
+                    while (rsNumFilas.next()) {
+                        filasDB = rsNumFilas.getInt(1);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(PruebasGui.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                System.out.println("filasDB:" + filasDB);
-                System.out.println("Tabla row count:" + t1.getRowCount());
-
-                if (filasDB < t1.getRowCount() - 1) {
+                if (t1.getSelectedRow() <= filasDB - 1) {
                     String consulta = "update " + t1.getName() + setValuesUpdate + " where" + setValues;
                     System.out.println(consulta);
                     hand.executeUpdate(consulta);
@@ -139,28 +138,17 @@ public class PruebasGui {
                     String consultaInsert = "insert into " + t1.getName() + " values(" + insertValuesUpdate + ")";
                     System.out.println(consultaInsert);
                     hand.executeUpdate(consultaInsert);
-                    DefaultTableModel nuevaFilaModel = (DefaultTableModel) t1.getModel();
+                    //De lo que sigue ya se encarga la llamada hand.cargarDB
+                    /*DefaultTableModel nuevaFilaModel = (DefaultTableModel) t1.getModel();
                     Object[] filaVacia = new Object[t1.getColumnCount()];
                     nuevaFilaModel.addRow(filaVacia);
                     t1.setModel(nuevaFilaModel);
-
+                     */
                 }
                 hand.cargarDB();
                 Gui.marco.repaint();
                 Gui.marco.revalidate();
-                /*
-                System.out.println("Select id,nombre,valor from "+t1.getName()+" where"+setValues);
-                ResultSet rs=hand.executeConsulta("Select id,nombre,valor from "+t1.getName()+" where"+setValues);
-                try {
-                    System.out.println("Aqui sale la consulta");
-                    while(rs.next()){
-                        System.out.println(rs.getInt(1) +","+rs.getString(2)+","+rs.getFloat(3));
-                    }
-                    
-                } catch (SQLException ex) {
-                    Logger.getLogger(PruebasGui.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                 */
+
             });
         });
 

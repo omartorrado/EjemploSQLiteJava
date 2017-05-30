@@ -8,6 +8,7 @@ package ejemplosqlitejava;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -114,7 +115,7 @@ public class SQLiteHandler {
         try {
             st.executeUpdate(consulta);
         } catch (SQLException ex) {
-            Logger.getLogger(SQLiteHandler.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al realizar la modificacion");
         }
     }
     
