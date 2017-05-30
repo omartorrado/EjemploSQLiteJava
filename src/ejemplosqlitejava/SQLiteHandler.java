@@ -61,13 +61,20 @@ public class SQLiteHandler {
                 ResultSet rs=st2.executeQuery("pragma table_info("+nombreTabla+")");
                 
                 int contadorCampos=0;
+                System.out.println("Lista campos "+nombreTabla+":");
                 while(rs.next()){
+                    /*
+                    for(int r=1;r<=rs.getMetaData().getColumnCount();r++){
+                    System.out.println(rs.getMetaData().getColumnName(r));
+                    }
+                       */
                     //La string 2 del pragma es el nombre y la 3 el typo de dato
                     String columnName=rs.getString(2);
-                    //Colun type no lo uso de momento
+                    //Column type no lo uso de momento
                     String columnType=rs.getString(3);
                     modeloTabla.addColumn(columnName);
                     contadorCampos++;
+                    System.out.println(columnName+", type:"+columnType);
                     }
                 //Creo otro statement para la busqueda de los valores de cada fila de la tabla
                 Statement st3=cn.createStatement();

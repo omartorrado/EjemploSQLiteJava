@@ -35,7 +35,7 @@ public class EjemploSQLiteJava {
             st.executeUpdate("DROP table if exists cartas");
             st.executeUpdate("DROP table if exists jugadores");
             st.executeUpdate("DROP table if exists barajas");
-            st.executeUpdate("CREATE table ejemplo(id integer, nombre varchar, valor float)");//Creamos una tabla
+            st.executeUpdate("CREATE table ejemplo(id integer, nombre text, valor float)");//Creamos una tabla
             /*
             A la hora de indicar los DataTypes podemos usar diferentes notaciones, por ejemplo
             nos serviría tanto string, como varchar o varchar(20), Char(20)

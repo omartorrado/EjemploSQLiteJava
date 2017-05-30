@@ -58,36 +58,39 @@ public class PruebasGui {
             JViewport vp1 = (JViewport) sp1.getComponent(0);
             JTable t1 = (JTable) vp1.getComponent(0);
             //System.out.println(t1.getSelectedRow());
+            if(t1.getSelectedRow()>(-1)){
             for (int i = 0; i < t1.getModel().getColumnCount(); i++) {
                 //System.out.println(t1.getColumnName(i) + " , " + t1.getValueAt(t1.getSelectedRow(), i));
+                
                 Gui.panelDatos.add(new JLabel("" + t1.getColumnName(i)));
                 Gui.panelDatos.add(new JTextField("" + t1.getValueAt(t1.getSelectedRow(), i)));
-
-            }
+                }
+            
             JButton botonCommit = new JButton("Aplicar Cambios");
             Gui.panelDatos.add(botonCommit);
             Gui.panelDatos.repaint();
             Gui.panelDatos.revalidate();
-
+            
             botonCommit.addActionListener((ActionEvent ev) -> {
-                //System.out.println((Gui.panelDatos.getComponentCount()-1)/2);
+                Boolean checkAllNull=true;
                 System.out.println(t1.getName());
 
                 String setValues = " ";
                 for (int l = 0; l < t1.getColumnCount(); l++) {
-                    if ((t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) && l < t1.getColumnCount() - 1) {
+                    System.out.println(t1.getValueAt(t1.getSelectedRow(), l));
+                    if (t1.getValueAt(t1.getSelectedRow(), l)==null && l < t1.getColumnCount() - 1) {
                         setValues = setValues + t1.getColumnName(l) + " is null and ";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) == null || t1.getValueAt(t1.getSelectedRow(), l).equals("")) {
+                    } else if (t1.getValueAt(t1.getSelectedRow(), l)==null){
                         setValues = setValues + t1.getColumnName(l) + " is null ";
-                    }else if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                    }else if (l < t1.getColumnCount() - 1 ) {
                         setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "' and ";
-                    }else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                    }else {
                         setValues = setValues + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
                     } 
                 }
 
                 /*
-                Aqui inserto los nuevos valores en la tabla
+                Aqui inserto los nuevos valores en la JTable
                  */
                 int k = 1;
                 for (int j = 0; j < (Gui.panelDatos.getComponentCount() - 1) / 2; j++) {
@@ -99,19 +102,21 @@ public class PruebasGui {
                 String setValuesUpdate = " set ";
                 String insertValuesUpdate = " ";
                 for (int l = 0; l < t1.getColumnCount(); l++) {
-                    if (l < t1.getColumnCount() - 1 && (t1.getValueAt(t1.getSelectedRow(), l).equals("null") || t1.getValueAt(t1.getSelectedRow(), l).equals("''"))) {
+                    if (l < t1.getColumnCount() - 1 && (t1.getValueAt(t1.getSelectedRow(), l).equals("null") || t1.getValueAt(t1.getSelectedRow(), l).equals(""))) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ,";
                         insertValuesUpdate = insertValuesUpdate + "null ,";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l).equals("null") || t1.getValueAt(t1.getSelectedRow(), l).equals("''")) {
+                    } else if (t1.getValueAt(t1.getSelectedRow(), l).equals("null") || t1.getValueAt(t1.getSelectedRow(), l).equals("")) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "=null ";
                         insertValuesUpdate = insertValuesUpdate + "null ";
                         //El !=null creo que dará true siempre pq
-                    } else if (l < t1.getColumnCount() - 1 && t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                    } else if (l < t1.getColumnCount() - 1 ) {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "', ";
                         insertValuesUpdate = insertValuesUpdate + "'" + t1.getValueAt(t1.getSelectedRow(), l) + "',";
-                    } else if (t1.getValueAt(t1.getSelectedRow(), l) != null) {
+                        checkAllNull=false;
+                    } else {
                         setValuesUpdate = setValuesUpdate + t1.getColumnName(l) + "='" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
                         insertValuesUpdate = insertValuesUpdate + "'" + t1.getValueAt(t1.getSelectedRow(), l) + "'";
+                        checkAllNull=false;
                     }
 
                 }
@@ -134,7 +139,7 @@ public class PruebasGui {
                     String consulta = "update " + t1.getName() + setValuesUpdate + " where" + setValues;
                     System.out.println(consulta);
                     hand.executeUpdate(consulta);
-                } else {
+                } else if(checkAllNull==false){
                     String consultaInsert = "insert into " + t1.getName() + " values(" + insertValuesUpdate + ")";
                     System.out.println(consultaInsert);
                     hand.executeUpdate(consultaInsert);
@@ -143,13 +148,17 @@ public class PruebasGui {
                     Object[] filaVacia = new Object[t1.getColumnCount()];
                     nuevaFilaModel.addRow(filaVacia);
                     t1.setModel(nuevaFilaModel);
-                     */
+                     */                    
+                }else{
+                    JOptionPane.showMessageDialog(null, "Como todos los valores son nulos no se incluiran en la BD");
                 }
+                
                 hand.cargarDB();
                 Gui.marco.repaint();
                 Gui.marco.revalidate();
 
             });
+            }
         });
 
     }
