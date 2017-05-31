@@ -99,7 +99,7 @@ public class SQLiteHandler {
                 
                 Gui.panelDerecha.add(new JScrollPane(tabla));
                 Gui.panelDerecha.setTitleAt(contadorTablas, nombreTabla);
-                
+                Gui.panelDerecha.setVisible(true);
                 
                 contadorTablas++;
             }

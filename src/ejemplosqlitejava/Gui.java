@@ -56,6 +56,7 @@ public class Gui {
         marco.add(panelIzquierda);
 
         panelDerecha.setSize(500,600);
+        panelDerecha.setVisible(false);
         marco.add(panelDerecha);
         
         marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +65,6 @@ public class Gui {
         marco.setVisible(true);
     }
     
-    //Action Listeners
+    
 
 }
