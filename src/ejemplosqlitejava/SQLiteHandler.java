@@ -63,11 +63,6 @@ public class SQLiteHandler {
                 int contadorCampos=0;
                 System.out.println("Lista campos "+nombreTabla+":");
                 while(rs.next()){
-                    /*
-                    for(int r=1;r<=rs.getMetaData().getColumnCount();r++){
-                    System.out.println(rs.getMetaData().getColumnName(r));
-                    }
-                       */
                     //La string 2 del pragma es el nombre y la 3 el typo de dato
                     String columnName=rs.getString(2);
                     //Column type no lo uso de momento
