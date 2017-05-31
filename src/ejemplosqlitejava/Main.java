@@ -23,7 +23,7 @@ import javax.swing.JViewport;
  *
  * @author otorradomiguez
  */
-public class PruebasGui {
+public class Main {
 
     /**
      * @param args the command line arguments
@@ -116,7 +116,7 @@ public class PruebasGui {
                             filasDB = rsNumFilas.getInt(1);
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(PruebasGui.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
                     if (t1.getSelectedRow() <= filasDB - 1) {
